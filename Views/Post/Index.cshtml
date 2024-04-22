@@ -1,6 +1,235 @@
 @model List<Post>
 
-    Post List
-    @foreach(var post in Model){
-    <p>@post.Title</p>
-    }
+
+    <div class="row mb-4">
+
+        <div class="col-lg-8">
+            <div class="bg-white p-3">
+                <h4 class="mb-4">Popüler Postlar</h4>
+                @foreach(var post in Model){
+
+                <div class="card bg-transparent border-0 mb-3">
+                    <div class="row">
+                        <div class="col-4">
+                            <img src="data:image/png;base64,@Convert.ToBase64String(@post.Image)"
+                                class="img-fluid rounded">
+                        </div>
+                        <div class="col-8">
+                            <h5><a href="" class="btn-link fw-bold">@post.Title</a></h5>
+                            <p>@post.Content
+                            </p>
+                            <a href="" class="badge bg-danger bg-opacity-10 text-danger mb-2 fw-bold">Web
+                                Development</a>
+                        </div>
+
+                    </div>
+                </div>
+                <hr class="my-3">
+                }
+                <nav>
+                    <ul class="pagination">
+                        <li class="page-item">
+                            <a href="" class="page-link">1</a>
+                        </li>
+                        <li class="page-item">
+                            <a href="" class="page-link">2</a>
+                        </li>
+                        <li class="page-item">
+                            <a href="" class="page-link">3</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Tags</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-inline d-flex flex-wrap gap-2">
+                        @foreach (var tag in @ViewBag.tags){
+                        <li class="list-item">
+                            <a href="" class="btn btn-outline-secondary btn-sm">@tag.Text</a>
+                        </li>
+
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        /* Tag kartının genel stil ayarları */
+        .card {
+
+            /* Kartın üst kısmında boşluk */
+            background: #ffffff;
+            /* Beyaz arka plan */
+            border-radius: 0.5rem;
+            /* Yuvarlak köşeler */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            /* Hafif bir gölge */
+            overflow: hidden;
+            /* İçerik dışına çıktığında gizle */
+        }
+
+        /* Tag kartı başlığı */
+        .card-header {
+            background-color: #f7f7f7;
+            /* Başlık için hafif gri arka plan */
+            border-bottom: 1px solid #eaeaea;
+            /* Başlık altında ince bir çizgi */
+            padding: 0.75rem 1.25rem;
+            /* İç padding */
+        }
+
+        .card-title {
+            margin: 0;
+            /* Varsayılan margin’i sıfırla */
+            font-size: 1.25rem;
+            /* Başlık font boyutu */
+            color: #333;
+            /* Başlık yazı rengi */
+        }
+
+        /* Tag kartı gövdesi */
+        .card-body {
+            padding: 1.25rem;
+            /* Gövde iç padding */
+        }
+
+        /* Tag listesi */
+        .list-inline {
+            padding-left: 0;
+            /* Sol padding’i sıfırla */
+            margin: 0;
+            /* Margin’i sıfırla */
+        }
+
+        /* Tag butonları */
+        .btn-outline-secondary {
+            color: #007bff;
+            /* Buton yazı rengi */
+            border: 1px solid #007bff;
+            /* Buton kenarlık rengi */
+            transition: all 0.3s ease-in-out;
+            /* Renk değişimi için geçiş efekti */
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: #007bff;
+            /* Buton hover arka plan rengi */
+            color: #ffffff;
+            /* Buton hover yazı rengi */
+        }
+
+        /* Tag butonları için küçük boyut */
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            /* Küçük boyutta padding */
+            font-size: 0.875rem;
+            /* Küçük boyutta font boyutu */
+            border-radius: 0.2rem;
+            /* Küçük boyutta köşe yuvarlama */
+        }
+
+        /* Taglar arasındaki boşluk */
+        .list-inline-item {
+            margin: 0.125rem;
+            /* İnce bir boşluk */
+        }
+
+        /* Genel arka plan ve padding */
+        .bg-white {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Başlık stili */
+        h4 {
+            color: #333;
+            margin-bottom: 2rem;
+        }
+
+        /* Post kart stili */
+        .card {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Resim köşelerini yuvarlak yap */
+        .img-fluid {
+            border-radius: 0.25rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Post başlığı stili */
+        .card .btn-link {
+            color: #0056b3;
+            text-decoration: none;
+            /* Alt çizgileri kaldır */
+            transition: color 0.3s;
+            /* Renk değişim animasyonu */
+        }
+
+        .card .btn-link:hover {
+            color: #00376b;
+            text-decoration: underline;
+            /* Hover'da altını çiz */
+        }
+
+        /* İçerik stili */
+        .card p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Kategori etiketi stili */
+        .badge {
+            font-size: 0.75rem;
+            padding: 0.5em 0.75em;
+            font-weight: bold;
+            border-radius: 0.2rem;
+            transition: background-color 0.3s, color 0.3s;
+            /* Arka plan ve yazı rengi değişim animasyonu */
+        }
+
+        .badge:hover {
+            background-color: #dc3545;
+            color: #ffffff;
+        }
+
+        /* Sayfalama stili */
+        .pagination .page-link {
+            color: #0056b3;
+            transition: background-color 0.3s, color 0.3s;
+            /* Arka plan ve yazı rengi değişim animasyonu */
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: #0056b3;
+            color: white;
+        }
+
+        .pagination .page-link:hover {
+            background-color: #004494;
+            color: white;
+        }
+
+        /* Sayfalama stili için fazladan boşluk */
+        .nav {
+            padding-top: 2rem;
+        }
+
+        /* Dikey çizgileri daha ince ve hafif yap */
+        hr.my-3 {
+            border-top: 1px solid #eee;
+        }
+    </style>

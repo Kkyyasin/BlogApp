@@ -13,6 +13,10 @@
     {
       "library": "popper.js@2.11.8",
       "destination": "wwwroot/lib/popper"
+    },
+    {
+      "library": "bootstrap-icons@1.11.3",
+      "destination": "wwwroot/lib/bootstrap-icon"
     }
   ]
 }
