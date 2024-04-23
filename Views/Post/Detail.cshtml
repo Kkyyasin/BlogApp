@@ -1,0 +1,121 @@
+@model Post
+
+<div class="row mb-4">
+
+    <div class="col-lg-8">
+        <div class="bg-white p-3">
+            <h4 class="mb-4">@Model.Title</h4>
+
+
+            <div class="tags">
+                @foreach (var tag in @Model.Tags){
+                <a href="/posts/tag/@tag.Url"
+                    class="badge bg-@tag.Color bg-opacity-10 text-@tag.Color mb-2 fw-bold">@tag.Text</a>
+                }
+            </div>
+            <img src="data:image/png;base64,@Convert.ToBase64String(@Model.Image)" class="img-fluid rounded">
+            <div class="content">
+                @Model.Content
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-lg-4">
+        <vc:tags-menu></vc:tags-menu>
+        <vc:new-posts></vc:new-posts>
+    </div>
+</div>
+<link rel="stylesheet" href="~/css/posts.css">
+<style>
+    /* Genel arka plan ve padding ayarları */
+    .bg-white {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 0.25rem;
+        box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+        /* Alt kısma boşluk ekle */
+    }
+
+    /* Post başlığı */
+    .bg-white h4 {
+        color: #333;
+        font-size: 2.2rem;
+        /* Büyük ve okunaklı başlık fontu */
+        font-weight: 700;
+        /* Başlık için kalın yazı tipi */
+        margin-bottom: 1rem;
+    }
+
+    /* Etiketler için stil */
+    .tags .badge {
+        font-size: 0.85rem;
+        background-color: rgba(220, 53, 69, 0.1);
+        /* Etiket arka planı daha belirgin */
+        color: #dc3545;
+        /* Etiket metin rengi */
+        padding: 0.5rem 1rem;
+        /* Etiket padding */
+        border-radius: 0.25rem;
+        /* Yuvarlak köşeler */
+        transition: background-color 0.2s, color 0.2s;
+    }
+
+    .tags .badge:hover {
+        background-color: #dc3545;
+        /* Hover durumunda arka plan rengi */
+        color: #fff;
+        /* Hover durumunda metin rengi */
+    }
+
+    /* Görsel stil ayarları */
+    .img-fluid {
+        max-width: 100%;
+        height: auto;
+        border-radius: 0.25rem;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    /* İçerik başlığı */
+    .bg-white h5 {
+        font-size: 1.5rem;
+        color: #0056b3;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    /* İçerik metni */
+    .content {
+        font-size: 1rem;
+        color: #666;
+        line-height: 1.8;
+        text-align: justify;
+    }
+
+    /* Yan sütun içindeki widget başlıkları */
+    .vc-component .card-header {
+        background-color: #f8f9fa;
+        color: #333;
+        font-size: 1.25rem;
+        padding: 1rem 1.25rem;
+        border-bottom: 1px solid #eaeaea;
+    }
+
+    /* Yan sütun içindeki widget gövdesi */
+    .vc-component .card-body {
+        padding: 1rem 1.25rem;
+    }
+
+    /* Linkler */
+    .btn-link {
+        color: #0056b3;
+        text-decoration: none;
+    }
+
+    .btn-link:hover {
+        text-decoration: underline;
+        color: #003975;
+    }
+</style>

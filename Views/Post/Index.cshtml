@@ -15,11 +15,16 @@
                                 class="img-fluid rounded">
                         </div>
                         <div class="col-8">
-                            <h5><a href="" class="btn-link fw-bold">@post.Title</a></h5>
+                            <h5><a href="/posts/@post.Url" class="btn-link fw-bold">@post.Title</a></h5>
                             <p>@post.Content
                             </p>
-                            <a href="" class="badge bg-danger bg-opacity-10 text-danger mb-2 fw-bold">Web
-                                Development</a>
+                            <div class="tags">
+                                @foreach (var tag in post.Tags){
+                                <a href="/posts/tag/@tag.Url"
+                                    class="badge bg-@tag.Color bg-opacity-10 text-@tag.Color mb-2 fw-bold">@tag.Text</a>
+                                }
+                            </div>
+
                         </div>
 
                     </div>
@@ -42,104 +47,12 @@
             </div>
         </div>
         <div class="col-lg-4">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title">Tags</h5>
-                </div>
-                <div class="card-body">
-                    <ul class="list-inline d-flex flex-wrap gap-2">
-                        @foreach (var tag in @ViewBag.tags){
-                        <li class="list-item">
-                            <a href="" class="btn btn-outline-secondary btn-sm">@tag.Text</a>
-                        </li>
-
-                        }
-                    </ul>
-                </div>
-            </div>
+            <vc:tags-menu></vc:tags-menu>
+            <vc:new-posts></vc:new-posts>
         </div>
     </div>
+    <link rel="stylesheet" href="~/css/posts.css">
     <style>
-        /* Tag kartının genel stil ayarları */
-        .card {
-
-            /* Kartın üst kısmında boşluk */
-            background: #ffffff;
-            /* Beyaz arka plan */
-            border-radius: 0.5rem;
-            /* Yuvarlak köşeler */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            /* Hafif bir gölge */
-            overflow: hidden;
-            /* İçerik dışına çıktığında gizle */
-        }
-
-        /* Tag kartı başlığı */
-        .card-header {
-            background-color: #f7f7f7;
-            /* Başlık için hafif gri arka plan */
-            border-bottom: 1px solid #eaeaea;
-            /* Başlık altında ince bir çizgi */
-            padding: 0.75rem 1.25rem;
-            /* İç padding */
-        }
-
-        .card-title {
-            margin: 0;
-            /* Varsayılan margin’i sıfırla */
-            font-size: 1.25rem;
-            /* Başlık font boyutu */
-            color: #333;
-            /* Başlık yazı rengi */
-        }
-
-        /* Tag kartı gövdesi */
-        .card-body {
-            padding: 1.25rem;
-            /* Gövde iç padding */
-        }
-
-        /* Tag listesi */
-        .list-inline {
-            padding-left: 0;
-            /* Sol padding’i sıfırla */
-            margin: 0;
-            /* Margin’i sıfırla */
-        }
-
-        /* Tag butonları */
-        .btn-outline-secondary {
-            color: #007bff;
-            /* Buton yazı rengi */
-            border: 1px solid #007bff;
-            /* Buton kenarlık rengi */
-            transition: all 0.3s ease-in-out;
-            /* Renk değişimi için geçiş efekti */
-        }
-
-        .btn-outline-secondary:hover {
-            background-color: #007bff;
-            /* Buton hover arka plan rengi */
-            color: #ffffff;
-            /* Buton hover yazı rengi */
-        }
-
-        /* Tag butonları için küçük boyut */
-        .btn-sm {
-            padding: 0.25rem 0.5rem;
-            /* Küçük boyutta padding */
-            font-size: 0.875rem;
-            /* Küçük boyutta font boyutu */
-            border-radius: 0.2rem;
-            /* Küçük boyutta köşe yuvarlama */
-        }
-
-        /* Taglar arasındaki boşluk */
-        .list-inline-item {
-            margin: 0.125rem;
-            /* İnce bir boşluk */
-        }
-
         /* Genel arka plan ve padding */
         .bg-white {
             background-color: #ffffff;

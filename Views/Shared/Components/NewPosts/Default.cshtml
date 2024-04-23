@@ -1,0 +1,86 @@
+@model List<Post>
+
+    <div class="card mb-2 card-recent-posts">
+        <div class="card-header">
+            <h5 class="card-title mb-0">Son Eklenen Postlar</h5>
+        </div>
+        <div class="card-body">
+            @foreach (var post in Model){
+            <div class="mb-3">
+                <h6 class="mb-0">
+                    <a href="">@post.Title</a>
+                </h6>
+            </div>
+            }
+        </div>
+    </div>
+    <style>
+        /* Son Eklenen Postlar kartı için genel stil */
+        .card-recent-posts {
+            background: #fff;
+            /* Beyaz arka plan */
+            border-radius: 0.5rem;
+            /* Yuvarlak köşeler */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            /* Hafif bir gölge */
+        }
+
+        /* Kart başlığı */
+        .card-recent-posts .card-header {
+            background-color: #f7f7f7;
+            /* Hafif gri arka plan */
+            border-bottom: 1px solid #eaeaea;
+            /* Başlık altında ince bir çizgi */
+        }
+
+        /* Kart başlığı için başlık stil ayarlamaları */
+        .card-recent-posts .card-title {
+            color: #333;
+            /* Başlık yazı rengi */
+            font-size: 1.2rem;
+            /* Başlık font boyutu */
+            margin-bottom: 0.75rem;
+            /* Başlık altı boşluk */
+        }
+
+        /* Post başlıkları */
+        .card-recent-posts h6 {
+            font-size: 1rem;
+            /* Post başlık font boyutu */
+            color: #007bff;
+            /* Post başlık rengi */
+            font-weight: 500;
+            /* Biraz kalın */
+            margin-bottom: 0.5rem;
+            /* Post başlıkları altındaki boşluk */
+            transition: color 0.3s ease-in-out;
+            /* Renk geçiş animasyonu */
+        }
+
+        /* Post başlıklarının üzerine gelindiğinde */
+        .card-recent-posts h6:hover {
+            color: #0056b3;
+            /* Hover rengi */
+            text-decoration: none;
+            /* Altı çizili olmaktan çıkar */
+            cursor: pointer;
+            /* İmleç işareti */
+        }
+
+        /* Her post arasındaki ayırıcı için */
+        .card-recent-posts .mb-3 {
+            padding-bottom: 0.75rem;
+            /* Alt padding */
+            border-bottom: 1px solid #eaeaea;
+            /* İnce çizgi ayırıcı */
+        }
+
+        /* Son post için alt çizgiyi kaldır */
+        .card-recent-posts .mb-3:last-child {
+            border-bottom: none;
+        }
+
+        .card-recent-posts .card-body a {
+            text-decoration: none;
+        }
+    </style>

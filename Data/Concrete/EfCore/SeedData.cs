@@ -61,15 +61,15 @@ namespace BlogApp.Data.Concrete.EfCore
                 if (!context.Tags.Any())
                 {
                     context.Tags.AddRange(
-                        new Tag { Text = "Web Programlama" },
-                        new Tag { Text = "C#" },
-                        new Tag { Text = "ASP.NET Core" },
-                        new Tag { Text = "Entity Framework Core" },
-                        new Tag { Text = "LINQ" },
-                        new Tag { Text = "MVC" },
-                        new Tag { Text = "Mobile Development" },
-                        new Tag { Text = "Xamarin" },
-                        new Tag { Text = "Flutter" }
+                        new Tag { Text = "Web Programlama", Url = "web-programlama", Color = TagColors.primary },
+                        new Tag { Text = "C#", Url = "c#", Color = TagColors.secondary },
+                        new Tag { Text = "ASP.NET Core", Url = "asp-net-core", Color = TagColors.success },
+                        new Tag { Text = "Entity Framework Core", Url = "entity-framework-core", Color = TagColors.warning },
+                        new Tag { Text = "LINQ", Url = "linq", Color = TagColors.danger },
+                        new Tag { Text = "MVC", Url = "mvc", Color = TagColors.secondary },
+                        new Tag { Text = "Mobile Development", Url = "mobile-development", Color = TagColors.danger },
+                        new Tag { Text = "Xamarin", Url = "xamarin", Color = TagColors.danger },
+                        new Tag { Text = "Flutter", Url = "flutter", Color = TagColors.primary }
                     );
                     context.SaveChanges();
                 }
@@ -107,6 +107,7 @@ namespace BlogApp.Data.Concrete.EfCore
                         Tags = webProgrammingTags,
                         UserId = users.First().UserId,
                        Image = LoadImageFromFile("\\wwwroot\\images\\asp.jpg")
+                       ,Url="asp-net"
                     },
                     new Post
                     {
@@ -116,7 +117,8 @@ namespace BlogApp.Data.Concrete.EfCore
                         PublishedOn = DateTime.Now.AddDays(-20),
                         Tags = mobileDevelopmentTags,
                         UserId = users.Skip(1).First().UserId,
-                       Image = LoadImageFromFile("\\wwwroot\\images\\xamarin.png")
+                       Image = LoadImageFromFile("\\wwwroot\\images\\xamarin.png"),
+                       Url = "xamarin"
                     },
                     // Daha fazla Post ekleyebilirsiniz.
                 };
