@@ -108,6 +108,10 @@ namespace BlogApp.Data.Concrete.EfCore
                         UserId = users.First().UserId,
                        Image = LoadImageFromFile("\\wwwroot\\images\\asp.jpg")
                        ,Url="asp-net"
+                       ,Comments=new List<Comment> {
+                        new Comment{Text="İyi bir kurs",PublishedOn=DateTime.Now.AddDays(-10),UserId=1},
+                            new Comment{Text="Güzel bir kurs",PublishedOn=DateTime.Now.AddDays(-5),UserId=2}
+                       }
                     },
                     new Post
                     {

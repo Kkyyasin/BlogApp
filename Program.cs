@@ -16,7 +16,7 @@ app.UseStaticFiles();
 SeedData.TestVerileriniDoldur(app);
 app.MapControllerRoute(
 name: "post_detail",
-pattern: "posts/{url}",
+pattern: "posts/detail/{url}",
 defaults: new { controller = "Post", action = "Detail" }
 );
 app.MapControllerRoute(

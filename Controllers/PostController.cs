@@ -39,8 +39,23 @@ namespace BlogApp.Controllers
         {
             return View(await _postrepository.
             Posts.
-            Include(p => p.Tags). //Tagslere erişim sağlar
+            Include(p => p.Tags) //Tagslere erişim sağlar
+            .Include(p => p.Comments) //Yorumlara erişim sağlar
+            .ThenInclude(p => p.User).  //yorumu yapan kullaniciya erişim sağlar
             FirstOrDefaultAsync(p => p.Url == url));
+        }
+        public async Task<IActionResult> Detail2(int Id)
+        {
+            return View("Detail", await _postrepository.
+            Posts.
+            Include(p => p.Tags) //Tagslere erişim sağlar
+            .Include(p => p.Comments) //Yorumlara erişim sağlar
+            .ThenInclude(p => p.User).  //yorumu yapan kullaniciya erişim sağlar
+            FirstOrDefaultAsync(p => p.PostId == Id));
+        }
+        public async Task<IActionResult> AddComments(int PostId, String UserName, String Text)
+        {
+            return RedirectToAction("Detail2", new { Id = PostId });
         }
     }
 }
