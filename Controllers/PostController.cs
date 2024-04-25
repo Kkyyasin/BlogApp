@@ -57,5 +57,18 @@ namespace BlogApp.Controllers
         {
             return RedirectToAction("Detail2", new { Id = PostId });
         }
+        public async Task<IActionResult> List(string? query)
+
+        {
+            IQueryable<Post> posts = _postrepository.Posts.AsQueryable();
+
+            if (!string.IsNullOrEmpty(query))
+            {
+                posts = posts.Where(p => p.Title.Contains(query));
+
+            }
+
+            return View(await posts.ToListAsync());
+        }
     }
 }

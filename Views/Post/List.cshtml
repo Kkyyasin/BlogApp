@@ -1,0 +1,260 @@
+@model List<Post>
+    <div class="search-filter-section">
+        <form asp-action="List" method="get" class="search-form">
+            <input type="text" class="search-input" name="query" placeholder="Postlarda ara..."
+                aria-label="Postlarda ara">
+            <button type="submit" class="search-button">Ara</button>
+        </form>
+
+
+    </div>
+
+    <div class="post-list">
+        @foreach (var post in Model)
+        {
+        <div class="post-item">
+            <div class="post-image">
+                <img src="data:image/png;base64,@Convert.ToBase64String(@post.Image)" alt="Post Image" class="rounded">
+            </div>
+            <div class="post-details">
+                <h3 class="post-title">@post.Title</h3>
+                <p class="post-excerpt">@post.PublishedOn.ToString("dd MMM yyyy")</p>
+                <div class="post-actions">
+                    <a href="/posts/edit/@post.PostId" class="action-link edit">Düzenle</a>
+                    <a href="/posts/delete/@post.PostId" class="action-link delete">Sil</a>
+                </div>
+            </div>
+            <div class="post-status">
+                <label class="switch">
+                    <input type="checkbox" @if(post.IsActive){ <text>checked</text> }
+                    onchange="togglePostStatus(@post.PostId, this)">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </div>
+        }
+    </div>
+
+    <style>
+        /* Post listesi genel stilleri */
+        .post-list {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Her post için stiller */
+        .post-item {
+            display: flex;
+            align-items: flex-start;
+            /* Resim ile metin üst hizalı olsun */
+            background: #fff;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+        }
+
+        /* Post resimleri için stil */
+        .post-image img {
+            width: 120px;
+            /* Resim genişliği */
+            height: auto;
+            /* Resim yüksekliği otomatik */
+            border-radius: 4px;
+            /* Resim köşe yuvarlaklığı */
+            margin-right: 1rem;
+            /* Resim ve detaylar arası boşluk */
+        }
+
+        /* Post detayları ve içerik için stil */
+        .post-details {
+            flex: 1;
+        }
+
+        .post-title {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.25rem;
+            color: #333;
+        }
+
+        .post-excerpt {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 1rem;
+            /* Tarih ve aksiyon linkleri arası boşluk */
+        }
+
+        /* Düzenleme ve silme linkleri için stiller */
+        .post-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .action-link {
+            text-decoration: none;
+            color: #fff;
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .edit {
+            background-color: #007bff;
+            margin-right: 0.5rem;
+            /* Düzenle ve Sil butonları arası boşluk */
+        }
+
+        .edit:hover {
+            background-color: #0056b3;
+        }
+
+        .delete {
+            background-color: #dc3545;
+        }
+
+        .delete:hover {
+            background-color: #c82333;
+        }
+
+        /* Toggle Switch Stili */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        input:checked+.slider {
+            background-color: #2196F3;
+        }
+
+        input:focus+.slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked+.slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+
+        /* Yuvarlak Slider için */
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+
+        /* Arama ve filtreleme bölümü için genel stiller */
+        .search-filter-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: #f8f9fa;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Arama formu stilleri */
+        .search-form {
+            display: flex;
+            flex-grow: 1;
+        }
+
+        .search-input {
+            flex-grow: 1;
+            padding: 0.5rem 1rem;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            margin-right: 0.5rem;
+        }
+
+        .search-button {
+            padding: 0.5rem 1rem;
+            border: none;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 0.25rem;
+            cursor: pointer;
+        }
+
+        .search-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Filtreleme dropdown stil ayarları */
+        .filter-dropdown {
+            margin-left: 1rem;
+        }
+
+        .filter-dropdown .form-label {
+            margin-right: 0.5rem;
+        }
+
+        .category-select {
+            padding: 0.5rem;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+        }
+    </style>
+    <script>
+
+        function togglePostStatus(postId, element) {
+            var isActive = element.checked;
+
+            // Sunucuya post durumu değişikliği gönder
+            fetch('/post/toggle-status', {
+                method: 'POST',
+                body: JSON.stringify({ postId: postId, isActive: isActive }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Başarılı bir değişiklik sonrasında yapılacak işlemler
+                    console.log(data);
+                })
+                .catch(error => {
+                    // Hata işleme
+                    console.error('Error:', error);
+                });
+        }
+
+    </script>

@@ -25,6 +25,7 @@ pattern: "posts/tag/{tag}",
 defaults: new { controller = "Post", action = "Index" }
 );
 
+
 app.MapControllerRoute(
 name: "default",
 pattern: "{controller=Post}/{action=Index}"
