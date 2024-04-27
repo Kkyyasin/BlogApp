@@ -1,3 +1,4 @@
+using System.Net.Mime;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -19,13 +20,14 @@ namespace BlogApp.Controllers
         private readonly IPostRepository _postrepository;
         private readonly ITagRepository _tagRepository;
         private readonly ICommentRepository _commentrepository;
+        private readonly IUserRepository _userRepository;
 
-        public PostController(IPostRepository postrepository, ITagRepository tagRepository, ICommentRepository commentRepository)
+        public PostController(IPostRepository postrepository, ITagRepository tagRepository, ICommentRepository commentRepository, IUserRepository userRepository)
         {
             _tagRepository = tagRepository;
             _postrepository = postrepository;
             _commentrepository = commentRepository;
-
+            _userRepository = userRepository;
         }
 
         public async Task<IActionResult> Index(string tag)
@@ -51,7 +53,7 @@ namespace BlogApp.Controllers
             FirstOrDefaultAsync(p => p.Url == url));
         }
         [HttpPost]
-        public async Task<IActionResult> AddComments(int PostId, String UserName, String Text, String Url)
+        public async Task<IActionResult> AddComments(int PostId, String UserName, String Text)
         {
 
             if (ModelState.IsValid)
@@ -61,11 +63,13 @@ namespace BlogApp.Controllers
                     Text = Text,
                     PublishedOn = DateTime.Now,
                     PostId = PostId,
-                    UserId = 1
+                    UserId = 1,
+
                 };
                 _commentrepository.CreateComment(Entity);
+                User user = await _userRepository.Users.FirstOrDefaultAsync(u => u.UserId == 1);
                 // İşlem başarılı mesajı
-                return Json(new { success = true, message = "Yorum başarıyla eklendi!" });
+                return Json(new { success = true, message = "Yorum başarıyla eklendi!", Text = Entity.Text, UserName = UserName, PublishedOn = Entity.PublishedOn, userImageBase64 = Convert.ToBase64String(user.Image) });
             }
             // İşlem başarısız mesajı
             return Json(new { success = false, message = "Yorum eklenemedi, lütfen tekrar deneyin." });

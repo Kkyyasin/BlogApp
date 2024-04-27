@@ -19,11 +19,35 @@
             </div>
         </div>
         <div class="bg-white mt-3">
+            <div class="card  comment-form-card border-0">
+                <div class="card-header pb-0">
+                    <h4>Yorum Ekle</h4>
+                </div>
+                <div class="card-body">
+                    <form id="commentForm">
+
+                        <input type="hidden" name="PostId" value="@Model.PostId" id="PostId">
+
+                        <div class="mb-3">
+                            <label for="UserName" class="form-label">Kullanıcı Adı</label>
+                            <input type="text" class="form-control" name="UserName" id="UserName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="Text" class="form-label">Yorum</label>
+                            <textarea name="Text" id="Text" rows="5" class="form-control" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <button class="btn btn-primary" id="btnYorumKayit">Kaydet</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <hr class="my-4">
             <div class="card border-0">
                 <div class="card-header pb-0">
                     <h4>@Model.Comments.Count() adet yorum</h4>
                 </div>
-                <div class="card-body">
+                <div class="card-body" id="yorumlar">
                     @foreach (var comment in Model.Comments){
                     <div class="comment-item my-4 d-flex align-items-start">
                         <img src="data:image/png;base64,@Convert.ToBase64String(@comment.User.Image)" alt=""
@@ -41,30 +65,8 @@
                 </div>
 
             </div>
-            <hr class="my-4">
-            <div class="card  comment-form-card border-0">
-                <div class="card-header pb-0">
-                    <h4>Yorum Ekle</h4>
-                </div>
-                <div class="card-body">
-                    <form id="commentForm">
 
-                        <input type="hidden" name="PostId" value="@Model.PostId">
-                        <input type="hidden" name="Url" value="@Model.Url">
-                        <div class="mb-3">
-                            <label for="UserName" class="form-label">Kullanıcı Adı</label>
-                            <input type="text" class="form-control" name="UserName" id="UserName" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="Text" class="form-label">Yorum</label>
-                            <textarea name="Text" id="Text" rows="5" class="form-control" required></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <button type="submit" class="btn btn-primary">Kaydet</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+
         </div>
 
     </div>
@@ -75,6 +77,69 @@
         <vc:new-posts></vc:new-posts>
     </div>
 </div>
+@section Scripts{
+<script>
+    $(document).ready(function () {
+        $("#btnYorumKayit").click(function (event) {
+            event.preventDefault(); // Formun submit olmasını engelle
+            var postData = {
+                PostId: $("#PostId").val(),
+                UserName: $("#UserName").val(),
+                Text: $("#Text").val()
+            };
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("AddComments")', // Metot URL'nizi doğru belirtin
+                dataType: "json",
+                data: postData,
+                success: function (data) {
+                    if (data.success) {
+                        // Yorum HTML yapısını oluştur
+                        var userImageBase64 = data.userImageBase64; // Server'dan dönen base64 kullanıcı resmi
+                        var newCommentHtml = `
+                        @foreach (var comment in Model.Comments){
+                            <div class="comment-item my-4 d-flex align-items-start">
+                                <img src="data:image/png;base64,@Convert.ToBase64String(@comment.User.Image)" alt=""
+                                    class="avatar rounded-circle me-3">
+                                <div>
+                                    <h6 class="mb-0">
+                                        @comment.User.UserName
+                                    </h6>
+                                    <span class="text-muted">@comment.PublishedOn.ToString("dd MMM yyyy")</span>
+                                    <p>@comment.Text</p>
+                                </div>
+                            </div>
+                            }
+                            <div class="comment-item my-4 d-flex align-items-start">
+                                <img src="data:image/png;base64,${data.userImageBase64}" alt="" class="avatar rounded-circle me-3">
+                                <div>
+                                    <h6 class="mb-0">${postData.UserName}</h6>
+                                    <span class="text-muted">${new Date().toLocaleDateString("tr-TR", { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                                    <p>${postData.Text}</p>
+                                </div>
+                            </div>`;
+
+                        // Yorumları içeren div'e yeni yorumu ekle
+
+                        $('#yorumlar').html(newCommentHtml);
+                        // Form alanlarını temizle
+                        $("#UserName").val('');
+                        $("#Text").val('');
+                        // Yorum sayısını güncelle
+                        var commentCount = parseInt($(".card-header h4").text().match(/\d+/)[0], 10) + 1;
+                        $(".card-header h4").text(commentCount + " adet yorum");
+                    } else {
+                        console.log(data.message);
+                    }
+                }
+            });
+        });
+    });
+
+</script>
+
+}
 <link rel="stylesheet" href="~/css/posts.css">
 <style>
     /* Yorum formu kartı için genel stil */

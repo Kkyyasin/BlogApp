@@ -233,3 +233,33 @@
             border-radius: 0.25rem;
         }
     </style>
+    @section Scripts{
+    <script>
+        function togglePostStatus(postId, isActive) {
+            const payload = JSON.stringify({ isActive: isActive });
+            console.log("Sending payload:", payload);
+
+            fetch(`/Post/TogglePostStatus/${postId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+
+                },
+                body: payload
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Network response was not ok: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("Status updated successfully:", data);
+                    alert(data.message);
+                })
+                .catch(error => {
+                    console.error('Error updating post status:', error);
+                    alert('Error updating post status: ' + error.message);
+                });
+        }
+    </script>}
