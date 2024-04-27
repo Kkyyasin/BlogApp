@@ -1,12 +1,11 @@
 @model List<Post>
+
     <div class="search-filter-section">
         <form asp-action="List" method="get" class="search-form">
             <input type="text" class="search-input" name="query" placeholder="Postlarda ara..."
                 aria-label="Postlarda ara">
             <button type="submit" class="search-button">Ara</button>
         </form>
-
-
     </div>
 
     <div class="post-list">
@@ -26,15 +25,16 @@
             </div>
             <div class="post-status">
                 <label class="switch">
-                    <input type="checkbox" @if(post.IsActive){ <text>checked</text> }
-                    onchange="togglePostStatus(@post.PostId, this)">
+
+                    <input type="checkbox" @(post.IsActive ? "checked" : "" )
+                        onchange="togglePostStatus(@post.PostId, this.checked)">
                     <span class="slider round"></span>
                 </label>
             </div>
+
         </div>
         }
     </div>
-
     <style>
         /* Post listesi genel stilleri */
         .post-list {
@@ -233,28 +233,3 @@
             border-radius: 0.25rem;
         }
     </style>
-    <script>
-
-        function togglePostStatus(postId, element) {
-            var isActive = element.checked;
-
-            // Sunucuya post durumu değişikliği gönder
-            fetch('/post/toggle-status', {
-                method: 'POST',
-                body: JSON.stringify({ postId: postId, isActive: isActive }),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    // Başarılı bir değişiklik sonrasında yapılacak işlemler
-                    console.log(data);
-                })
-                .catch(error => {
-                    // Hata işleme
-                    console.error('Error:', error);
-                });
-        }
-
-    </script>

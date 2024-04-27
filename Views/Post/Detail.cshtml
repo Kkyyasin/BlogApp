@@ -47,8 +47,10 @@
                     <h4>Yorum Ekle</h4>
                 </div>
                 <div class="card-body">
-                    <form action="/post/AddComments" method="post">
+                    <form id="commentForm">
+
                         <input type="hidden" name="PostId" value="@Model.PostId">
+                        <input type="hidden" name="Url" value="@Model.Url">
                         <div class="mb-3">
                             <label for="UserName" class="form-label">Kullanıcı Adı</label>
                             <input type="text" class="form-control" name="UserName" id="UserName" required>

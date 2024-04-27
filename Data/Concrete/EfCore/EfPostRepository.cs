@@ -21,5 +21,10 @@ namespace BlogApp.Data.Concrete.EfCore
             _context.Posts.Add(post);
             _context.SaveChanges();
         }
+        public void UpdatePost(Post post)
+        {
+            _context.Posts.Update(post);
+            _context.SaveChanges();
+        }
     }
 }

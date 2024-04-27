@@ -7,7 +7,7 @@
             <div class="bg-white p-3">
                 <h4 class="mb-4">Popüler Postlar</h4>
                 @foreach(var post in Model){
-
+                @if(post.IsActive==true){
                 <div class="card bg-transparent border-0 mb-3">
                     <div class="row">
                         <div class="col-4">
@@ -29,7 +29,7 @@
 
                     </div>
                 </div>
-                <hr class="my-3">
+                <hr class="my-3">}
                 }
                 <nav>
                     <ul class="pagination">

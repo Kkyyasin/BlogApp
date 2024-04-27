@@ -1,5 +1,6 @@
 using BlogApp.Data.Abstract;
 using BlogApp.Data.Concrete.EfCore;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,26 +11,40 @@ builder.Services.AddDbContext<BlogContext>(options =>
 });
 builder.Services.AddScoped<IPostRepository, EfPostRepository>();
 builder.Services.AddScoped<ITagRepository, EfTagRepository>();
+builder.Services.AddScoped<ICommentRepository, EfCommentRepository>();
+
+
+
+
 var app = builder.Build();
 
 app.UseStaticFiles();
 SeedData.TestVerileriniDoldur(app);
-app.MapControllerRoute(
-name: "post_detail",
-pattern: "posts/detail/{url}",
-defaults: new { controller = "Post", action = "Detail" }
-);
-app.MapControllerRoute(
-name: "post_by_tag",
-pattern: "posts/tag/{tag}",
-defaults: new { controller = "Post", action = "Index" }
-);
 
+app.UseRouting();
 
-app.MapControllerRoute(
-name: "default",
-pattern: "{controller=Post}/{action=Index}"
-);
+app.UseEndpoints(endpoints =>
+{
+
+    endpoints.MapControllerRoute(
+        name: "post_detail",
+        pattern: "posts/detail/{url}",
+        defaults: new { controller = "Post", action = "Detail" }
+    );
+
+    // Tag'e göre postlar için güzergah
+    endpoints.MapControllerRoute(
+        name: "post_by_tag",
+        pattern: "posts/tag/{tag}",
+        defaults: new { controller = "Post", action = "Index" }
+    );
+
+    // Varsayılan güzergah
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Post}/{action=Index}/{id?}"
+    );
+});
 
 
 app.Run();

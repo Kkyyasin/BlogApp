@@ -6,10 +6,9 @@ using BlogApp.Entity;
 
 namespace BlogApp.Data.Abstract
 {
-    public interface IPostRepository
+    public interface ICommentRepository
     {
-        IQueryable<Post> Posts { get; }
-        void CreatePost(Post post);
-        void UpdatePost(Post post);
+        IQueryable<Comment> Comments { get; }
+        void CreateComment(Comment comment);
     }
 }
