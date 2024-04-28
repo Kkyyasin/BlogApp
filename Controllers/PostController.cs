@@ -67,7 +67,7 @@ namespace BlogApp.Controllers
 
                 };
                 _commentrepository.CreateComment(Entity);
-                User user = await _userRepository.Users.FirstOrDefaultAsync(u => u.UserId == 1);
+                User user = await _userRepository.Users.FirstOrDefaultAsync(u => u.Id == 1);
                 // İşlem başarılı mesajı
                 return Json(new { success = true, message = "Yorum başarıyla eklendi!", Text = Entity.Text, UserName = UserName, PublishedOn = Entity.PublishedOn, userImageBase64 = Convert.ToBase64String(user.Image) });
             }

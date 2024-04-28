@@ -32,31 +32,7 @@ namespace BlogApp.Data.Concrete.EfCore
                 {
                     context.Database.Migrate();
                 }
-                /* if (!context.Tags.Any())
-                 {
-                     context.Tags.AddRange(
-                     new Tag { Text = "Web Programlama" });
-                     context.SaveChanges();
-                 }
-                 if (!context.Users.Any())
-                 {
-                     context.Users.AddRange(
-                     new User { UserName = "Yasin" });
-                     context.SaveChanges();
-                 }
-                 if (!context.Posts.Any())
-                 {
-                     context.Posts.AddRange(
-                     new Post
-                     {
-                         Title = "Asp.Net Core",
-                         Content = "Asp.Net Core Dersleri",
-                         IsActive = true,
-                         PublishedOn = DateTime.Now.AddDays(-10),
-                         Tags = context.Tags.Take(3).ToList(),
-                         UserId = 1
-                     });
-                 }*/
+
                 // Tag varlıklarını kontrol edip ekleme
                 if (!context.Tags.Any())
                 {
@@ -78,12 +54,10 @@ namespace BlogApp.Data.Concrete.EfCore
                 if (!context.Users.Any())
                 {
                     context.Users.AddRange(
-                        new User { UserName = "Yasin", Image = LoadImageFromFile("\\wwwroot\\images\\user.png") },
-                        new User { UserName = "Ayşe", Image = LoadImageFromFile("\\wwwroot\\images\\user.png") },
-                        new User { UserName = "Ali", Image = LoadImageFromFile("\\wwwroot\\images\\user.png") },
-                        new User { UserName = "Fatma", Image = LoadImageFromFile("\\wwwroot\\images\\user.png") },
-                        new User { UserName = "Mehmet", Image = LoadImageFromFile("\\wwwroot\\images\\user.png") },
-                        new User { UserName = "Elif", Image = LoadImageFromFile("\\wwwroot\\images\\user.png") }
+                        new User { UserName = "Yasin", Name = "Yasin", Surname = "Özdemir", Email = "cozdemir56.yz@gmail.com", PasswordHash = "12345", Image = LoadImageFromFile("\\wwwroot\\images\\user.png") },
+                        new User { UserName = "Muhammed", Name = "Ayşe", Surname = "Özdemir", Email = "cozdemir49.yz@gmail.com", PasswordHash = "12345", Image = LoadImageFromFile("\\wwwroot\\images\\user.png") }
+
+
                     );
                     context.SaveChanges();
                 }
@@ -105,7 +79,7 @@ namespace BlogApp.Data.Concrete.EfCore
                         IsActive = true,
                         PublishedOn = DateTime.Now.AddDays(-10),
                         Tags = webProgrammingTags,
-                        UserId = users.First().UserId,
+                        UserId = users.First().Id,
                        Image = LoadImageFromFile("\\wwwroot\\images\\asp.jpg")
                        ,Url="asp-net"
                        ,Comments=new List<Comment> {
@@ -120,7 +94,7 @@ namespace BlogApp.Data.Concrete.EfCore
                         IsActive = true,
                         PublishedOn = DateTime.Now.AddDays(-20),
                         Tags = mobileDevelopmentTags,
-                        UserId = users.Skip(1).First().UserId,
+                        UserId = users.Skip(1).First().Id,
                        Image = LoadImageFromFile("\\wwwroot\\images\\xamarin.png"),
                        Url = "xamarin"
                     },
