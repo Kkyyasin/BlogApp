@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Encodings.Web;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BlogApp.Data.Concrete.EfCore;
 using BlogApp.Data.Services.Interfaces;
@@ -42,22 +43,7 @@ namespace BlogApp.Data.Services.Implementations
             var result = await _userManager.CreateAsync(user, model.Password);
             return result;
         }
-        public async Task EmailConfirmedAsync(User user)
-        {
-            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-            var url = GenerateConfirmEmailLink(user.Id.ToString(), code);
 
-            await _emailsender.SendEmailAsync(user.Email, "Hesabınızı Doğrulayın",
-                $"Lütfen hesabınızı doğrulamak için <a href='{HtmlEncoder.Default.Encode(url)}'>buraya tıklayın</a>.");
-
-        }
-        public string GenerateConfirmEmailLink(string userId, string code)
-        {
-            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
-            var link = urlHelper.Action("ConfirmEmail", "User", new { userId = userId, code = code }, protocol: "https");
-
-            return link;
-        }
     }
 }

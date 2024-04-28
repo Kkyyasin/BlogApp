@@ -4,6 +4,8 @@ using BlogApp.Data.Concrete.EfCore;
 using BlogApp.Data.Services.Implementations;
 using BlogApp.Data.Services.Interfaces;
 using BlogApp.Entity;
+using BlogApp.ExternalServices;
+using BlogApp.ExternalServices.Interfaces;
 using BlogApp.Models;
 using BlogApp.Services;
 using BlogApp.Services.Interfaces;
@@ -54,7 +56,11 @@ builder.Services.AddSingleton<IEmailSender, EmailService>(serviceProvider =>
     return new EmailService(emailSettings.SmtpHost, emailSettings.SmtpPort, emailSettings.FromAddress, emailSettings.SmtpUsername, emailSettings.SmtpPassword);
 });
 //JwtTokenProvider
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -68,8 +74,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
         };
     });
-
-
+builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 var app = builder.Build();
 
 app.UseStaticFiles();

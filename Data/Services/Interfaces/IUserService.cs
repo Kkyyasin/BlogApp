@@ -11,6 +11,6 @@ namespace BlogApp.Data.Services.Interfaces
     public interface IUserService
     {
         Task<IdentityResult> RegisterUserAsync(RegisterViewModel model);
-        Task EmailConfirmedAsync(User user);
+
     }
 }
