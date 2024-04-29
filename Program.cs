@@ -9,6 +9,7 @@ using BlogApp.ExternalServices.Interfaces;
 using BlogApp.Models;
 using BlogApp.Services;
 using BlogApp.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -46,9 +47,6 @@ builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
     .AddEntityFrameworkStores<BlogContext>()
     .AddDefaultTokenProviders().AddErrorDescriber<TurkishIdentityErrorDescriber>(); ;
 
-//Url Yonlendirme
-builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddSingleton<IEmailSender, EmailService>(serviceProvider =>
 {
@@ -74,13 +72,26 @@ builder.Services.AddAuthentication(options =>
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
         };
     });
+//Cookie
+builder.Services.ConfigureApplicationCookie(cookieOptions =>
+    {
+        cookieOptions.LoginPath = "/User/Login";
+        cookieOptions.LogoutPath = "/User/Logout";
+        cookieOptions.AccessDeniedPath = "/User/AccessDenied/";
+        cookieOptions.Cookie.SameSite = SameSiteMode.Strict;
+        cookieOptions.Cookie.HttpOnly = true;
+        cookieOptions.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+        cookieOptions.Cookie.Name = "UserCookie";
+    });
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 var app = builder.Build();
 
 app.UseStaticFiles();
 SeedData.TestVerileriniDoldur(app);
-
 app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
+
 
 app.UseEndpoints(endpoints =>
 {

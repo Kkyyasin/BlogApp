@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using BlogApp.Data.Abstract;
@@ -11,6 +12,8 @@ using BlogApp.Entity;
 using BlogApp.ExternalServices.Interfaces;
 using BlogApp.Models;
 using BlogApp.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -153,24 +156,12 @@ namespace BlogApp.Controllers
                         SameSite = SameSiteMode.Strict,// CSRF ataklarına karşı koruma sağlar
                         Expires = DateTimeOffset.UtcNow.AddHours(3)
                     });
+                    // Kullanıcı için bir oturum cookie'si oluştur
+                    await _sıgnInManager.SignInAsync(user, model.RememberMe);
 
                     return RedirectToAction("Index", "Post");
                 }
-                Console.WriteLine(result);
-                if (result == null)
-                    Console.WriteLine("sds");
-                if (result.IsLockedOut)
-                {
-                    Console.WriteLine("User is locked out.");
-                }
-                if (result.IsNotAllowed)
-                {
-                    Console.WriteLine("User is not allowed to sign in.");
-                }
-                if (result.RequiresTwoFactor)
-                {
-                    Console.WriteLine("User requires two-factor authentication.");
-                }
+
                 ModelState.AddModelError(string.Empty, "Geçersiz giriş denemesi.");
             }
             return View(model);

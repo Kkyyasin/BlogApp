@@ -20,14 +20,12 @@ namespace BlogApp.Data.Services.Implementations
     {
         private readonly UserManager<User> _userManager;
         private readonly IEmailSender _emailsender;
-        private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly IActionContextAccessor _actionContextAccessor;
-        public UserService(UserManager<User> userManager, IEmailSender emailSender, IUrlHelperFactory urlHelperFactory, IActionContextAccessor actionContextAccessor)
+
+        public UserService(UserManager<User> userManager, IEmailSender emailSender)
         {
             _userManager = userManager;
             _emailsender = emailSender;
-            _urlHelperFactory = urlHelperFactory;
-            _actionContextAccessor = actionContextAccessor;
+
         }
         public async Task<IdentityResult> RegisterUserAsync(RegisterViewModel model)
         {
