@@ -19,7 +19,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddControllersWithViews();
+
 builder.Services.AddDbContext<BlogContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("database"));
@@ -53,37 +53,39 @@ builder.Services.AddSingleton<IEmailSender, EmailService>(serviceProvider =>
     var emailSettings = serviceProvider.GetRequiredService<IOptions<EmailSettings>>().Value;
     return new EmailService(emailSettings.SmtpHost, emailSettings.SmtpPort, emailSettings.FromAddress, emailSettings.SmtpUsername, emailSettings.SmtpPassword);
 });
-//JwtTokenProvider
+
+// JWT ve Cookie tabanlı kimlik doğrulama için ayarlar
 builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddCookie(options =>
+{
+    options.LoginPath = "/User/Login";
+    options.LogoutPath = "/User/Logout";
+    options.AccessDeniedPath = "/User/AccessDenied";
+    options.Cookie.Name = "UserCookie";
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+    options.Cookie.SameSite = SameSiteMode.Strict;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
     {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
-        };
-    });
-//Cookie
-builder.Services.ConfigureApplicationCookie(cookieOptions =>
-    {
-        cookieOptions.LoginPath = "/User/Login";
-        cookieOptions.LogoutPath = "/User/Logout";
-        cookieOptions.AccessDeniedPath = "/User/AccessDenied/";
-        cookieOptions.Cookie.SameSite = SameSiteMode.Strict;
-        cookieOptions.Cookie.HttpOnly = true;
-        cookieOptions.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
-        cookieOptions.Cookie.Name = "UserCookie";
-    });
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+    };
+});
+
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+builder.Services.AddControllersWithViews();
 var app = builder.Build();
 
 app.UseStaticFiles();
